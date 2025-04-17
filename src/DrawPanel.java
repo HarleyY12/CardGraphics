@@ -52,6 +52,17 @@ class DrawPanel extends JPanel implements MouseListener {
         g.drawRect((int)button.getX(), (int)button.getY(), (int)button.getWidth(), (int)button.getHeight());
     }
 
+    public int getCardNumber(Card cards){
+        String value = cards.getValue();
+        if(value.equals("A")){
+            return 1;
+        }
+        if(value.equals("J") || value.equals("Q") || value.equals("K")){
+            return 0;
+        }
+        return Integer.parseInt(value);
+    }
+
     public void mousePressed(MouseEvent e) {
 
         Point clicked = e.getPoint();
@@ -84,6 +95,8 @@ class DrawPanel extends JPanel implements MouseListener {
                 }
             }
         }
+
+
 
 
     }

@@ -108,7 +108,6 @@ public class Card {
 
 
 
-
     public static ArrayList<Card> buildHand() {
         ArrayList<Card> deck = Card.buildDeck();
         ArrayList<Card> hand = new ArrayList<Card>();

@@ -10,6 +10,7 @@ import java.awt.Font;
 class DrawPanel extends JPanel implements MouseListener {
 
     private ArrayList<Card> hand;
+    private ArrayList<Card> deck;
 
     // Rectangle object represents a rectangle
     private Rectangle button;
@@ -17,9 +18,17 @@ class DrawPanel extends JPanel implements MouseListener {
     public DrawPanel() {
         button = new Rectangle(147, 280, 160, 26);
         this.addMouseListener(this);
-        hand = Card.buildHand();
+        deck = Card.buildDeck();
+        hand = buildHandFromDeck();
     }
-
+    public ArrayList<Card> buildHandFromDeck() {
+        ArrayList<Card> newHand = new ArrayList<Card>();
+        for (int i = 0; i < 9 && !deck.isEmpty(); i++) {
+            int r = (int)(Math.random() * deck.size());
+            newHand.add(deck.remove(r));
+        }
+        return newHand;
+    }
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         int x = 50;
@@ -50,6 +59,38 @@ class DrawPanel extends JPanel implements MouseListener {
         g.setFont(new Font("Courier New", Font.BOLD, 20));
         g.drawString("GET NEW CARDS", 150, 300);
         g.drawRect((int)button.getX(), (int)button.getY(), (int)button.getWidth(), (int)button.getHeight());
+
+        g.drawString("Cards left: " + deck.size(), 150, 330);
+        if (deck.isEmpty() && hand.isEmpty()) {
+            g.drawString("You win!", 130, 360);
+        }
+        if (!hasValidMove()) {
+            g.drawString("You lose!", 130, 390);
+        }
+    }
+    public boolean hasValidMove() {
+        for (int i = 0; i< hand.size();i++){
+            for (int j = i + 1; j < hand.size();j++){
+                if(getCardNumber(hand.get(i)) + getCardNumber(hand.get(j)) == 11){
+                    return true;
+                }
+            }
+        }
+        boolean hasJ = false;
+        boolean hasQ = false;
+        boolean hasK = false;
+        for (Card c : hand) {
+            if (c.getValue().equals("J")){
+                hasJ = true;
+            }
+            if (c.getValue().equals("Q")){
+                hasQ = true;
+            }
+            if (c.getValue().equals("K")){
+                hasK = true;
+            }
+        }
+        return hasJ && hasQ && hasK;
     }
 
     public int getCardNumber(Card cards){
@@ -63,6 +104,7 @@ class DrawPanel extends JPanel implements MouseListener {
         return Integer.parseInt(value);
     }
 
+
     public void mousePressed(MouseEvent e) {
 
         Point clicked = e.getPoint();
@@ -73,7 +115,7 @@ class DrawPanel extends JPanel implements MouseListener {
             // evaluates if mouse clicked the coordinates
             // within the button
             if (button.contains(clicked)) {
-                hand = Card.buildHand();
+                hand = buildHandFromDeck();
             }
 
             // checks if any card was clicked

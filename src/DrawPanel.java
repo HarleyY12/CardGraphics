@@ -14,12 +14,16 @@ class DrawPanel extends JPanel implements MouseListener {
 
     // Rectangle object represents a rectangle
     private Rectangle button;
+    private Rectangle playAgain;
+    private boolean gameOver;
 
     public DrawPanel() {
-        button = new Rectangle(147, 280, 160, 26);
+        button = new Rectangle(275, 30, 160, 26);
         this.addMouseListener(this);
         deck = Card.buildDeck();
         hand = buildHandFromDeck();
+        playAgain = new Rectangle(100,250,160,26);
+        gameOver = false;
     }
     public ArrayList<Card> buildHandFromDeck() {
         ArrayList<Card> newHand = new ArrayList<Card>();
@@ -57,16 +61,23 @@ class DrawPanel extends JPanel implements MouseListener {
         // font, boldness, size
         // includes a border around the text
         g.setFont(new Font("Courier New", Font.BOLD, 20));
-        g.drawString("GET NEW CARDS", 150, 300);
+        g.drawString("GET NEW CARDS", 275, 50);
         g.drawRect((int)button.getX(), (int)button.getY(), (int)button.getWidth(), (int)button.getHeight());
 
-        g.drawString("Cards left: " + deck.size(), 150, 330);
+        g.drawString("Cards left: " + deck.size(), 50, 450);
         if (deck.isEmpty() && hand.isEmpty()) {
-            g.drawString("You win!", 130, 360);
+            g.drawString("You win!", 130, 390);
+            gameOver = true;
         }
         if (!hasValidMove()) {
             g.drawString("You lose!", 130, 390);
+            gameOver = true;
         }
+        g.drawString("Play again",120,270);
+        g.drawRect((int)playAgain.getX(), (int)playAgain.getY(),
+                    (int)playAgain.getWidth(), (int)playAgain.getHeight());
+
+
     }
     public boolean hasValidMove() {
         for (int i = 0; i< hand.size();i++){
@@ -115,6 +126,11 @@ class DrawPanel extends JPanel implements MouseListener {
             // evaluates if mouse clicked the coordinates
             // within the button
             if (button.contains(clicked)) {
+                hand = buildHandFromDeck();
+                gameOver = false;
+            }
+            if(playAgain.contains(clicked)){
+                deck = Card.buildDeck();
                 hand = buildHandFromDeck();
             }
 

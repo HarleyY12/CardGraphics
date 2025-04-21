@@ -66,6 +66,10 @@ public class Card {
     public boolean getHighlight() {
         return highlight;
     }
+     public void setHighlight(boolean highlight) {
+        this.highlight = highlight;
+    }
+
 
     public BufferedImage getImage() {
         return image;
